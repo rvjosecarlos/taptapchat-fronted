@@ -10,10 +10,11 @@ type AvatarProps = {
 
 export default function Avatar({ online, /*toList,*/ imgUrl, profile }: AvatarProps){
     const { userProfile } = appZustandStore.useUserStore( state => state );
+    const darkMode = appZustandStore.useAppDarkStore( state => state.darkMode );
     console.log(userProfile);
 
     return(
-        <div className={`flex justify-center items-center rounded-full ${ profile ? "h-16 w-16" : "h-12 w-12" } ${ online ? "border-4 border-lime-500 shadow-sm shadow-lime-500" : "border-2 border-slate-300" } `}>
+        <div className={`flex justify-center items-center rounded-full ${ profile ? "h-16 w-16" : "h-12 w-12" } ${ online ? "border-4 border-lime-500 shadow-sm shadow-lime-500" : "border-2 border-slate-300" } ${ darkMode ? "bg-white" : "" }`}>
             {
                 !imgUrl ?
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">

@@ -332,7 +332,7 @@ export default function ChatApp(){
                     <div className="flex justify-center items-center w-full">
                         <div className="flex flex-col gap-3 items-center">
                             <Spinner />
-                            <p className={`${ darkMode && "text-white" }`}>
+                            <p className={`${ darkMode && "text-white" } text-center`}>
                                 Guardando copia de seguridad y cerrando sesión...
                             </p>  
                             <Logo className="h-32 w-32 bg-white rounded-lg"/>                          
