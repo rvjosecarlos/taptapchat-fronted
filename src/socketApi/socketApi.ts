@@ -4,6 +4,7 @@ const wssUrl = import.meta.env.VITE_WS_SERVER;
 
 export const createWSC = async (clientId: string, contactos: string[], username: User['name'], imgUrl?: User['imgUrl']) => {
     try{
+        // el parametro token no se esta ocupando
         const wsc = new WebSocket(wssUrl + `?token=${"token"}&clientId=${clientId}`);
 
         wsc.addEventListener("open", () => {            
