@@ -123,10 +123,10 @@ export default function ChatApp(){
             console.log("Se suscribe el websocket para mensajes entrantes");
 
             wsc.addEventListener("message", async (data) => {
-                console.log("Mensaje desde el servidor",data);
+                //console.log("Mensaje desde el servidor",data);
                 if( data && typeof data.data === "string" ){
                     const resWS: WSServerResponse = JSON.parse(data.data);
-                    console.log("resWS", resWS);
+                    //console.log("resWS", resWS);
 
                     if( resWS.type && resWS.type === "heartbeat" ){
                         console.log("Buenas cliente, soy el server sigo vivo");
