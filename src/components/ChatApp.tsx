@@ -3,7 +3,7 @@ import { appZustandStore } from "../store";
 import Chat from "./areaChat/Chat";
 import ChatInitial from "./areaChat/ChatInitial";
 import ContactList from "./listaContactos/ContactList";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Message, ServerResponse, WSServerResponse } from "../types";
 import { dataUser } from "../config/dataUser";
 import { createWSC } from "../socketApi/socketApi";
@@ -37,6 +37,7 @@ export default function ChatApp(){
     const cerrarSesion = appZustandStore.useUserStore( state => state.cerrarSesion );
     const darkMode = appZustandStore.useAppDarkStore( state => state.darkMode );
     const setDarkMode = appZustandStore.useAppDarkStore( state => state.setDarkMode );
+    const refIdInterval = useRef(null);
 
     useEffect(() => {
         console.log("Se ejecuta el use effect");
@@ -109,12 +110,14 @@ export default function ChatApp(){
 
             // Conectar al servidor websocket
             const idsContactos = loadContacts.map( contacto => contacto.id);
-            const wsc = await createWSC(userProfile!.id, idsContactos, userProfile!.name, userProfile?.imgUrl);
+            const { wsc, idInterval } = await createWSC(userProfile!.id, idsContactos, userProfile!.name, userProfile?.imgUrl);
 
-            if( typeof wsc === "string" ){
+            if( typeof wsc === "string" || !wsc ){
                 console.log("Error al crear el Websocket");
                 return;
-            }
+            };
+
+            refIdInterval.current = idInterval;
 
             setWscStore(wsc);            
             console.log("Se suscribe el websocket para mensajes entrantes");
@@ -125,7 +128,10 @@ export default function ChatApp(){
                     const resWS: WSServerResponse = JSON.parse(data.data);
                     console.log("resWS", resWS);
 
-                    if( resWS.type && resWS.type === "message" ){
+                    if( resWS.type && resWS.type === "heartbeat" ){
+                        console.log("Buenas cliente, soy el server sigo vivo");
+                    }
+                    else if( resWS.type && resWS.type === "message" ){
                         console.log("ES un mensaje entrante", resWS.message);
 
                         if( Notification.permission === "default" ){
@@ -277,6 +283,7 @@ export default function ChatApp(){
         suscribeWebSocket();
         
         return () => {
+            if (refIdInterval.current) clearInterval( refIdInterval.current ); 
             console.log(`Funcion limpiadora, ${appZustandStore.useSocketStore.getState().wscStore}`);
             appZustandStore.useSocketStore.getState().wscStore?.close(1000, "Cierre de conexion por funcion limpiadora");
             setContactos([]);
@@ -313,7 +320,7 @@ export default function ChatApp(){
         }));
 
         const activeContactStore = appZustandStore.useChatStore.getState().activeContact;
-        if( activeContactStore && typeof estado === "boolean"){
+        if( activeContactStore && resWS.originUserId === activeContactStore.id && typeof estado === "boolean" ){
             setActiveContact({
                 ...activeContactStore, 
                 online: estado,

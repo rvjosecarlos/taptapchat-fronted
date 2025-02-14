@@ -238,7 +238,7 @@ export default function OptionsProfile(){
 
     return(
         <Dialog open={showProfileView} as="div" className="relative z-40 focus:outline-none" onClose={handleClose}>
-            <div className="fixed inset-0 z-10 w-screen overflow-y-auto bg-gray-300/50">
+            <div className={`fixed inset-0 z-10 w-screen overflow-y-auto ${ darkMode ? "bg-black/60" : "bg-gray-300/50" }`}>
                 <div className="flex min-h-full items-center justify-center p-4">
                     <DialogPanel
                         transition
