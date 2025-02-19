@@ -289,6 +289,11 @@ export default function ChatApp(){
                     }, 5000);
                 }
                 else{
+                    setContactos([]);
+                    setContactosFiltrados([]);
+                    setWscStore(null);
+                    setHistoryMessage([]); 
+                    setUserProfile(null);
                     location.reload();
                 }
             });
