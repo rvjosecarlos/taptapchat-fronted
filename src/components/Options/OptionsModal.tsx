@@ -1,6 +1,8 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { appZustandStore } from '../../store';
+import { logout } from '../../api/authAPI';
 import OptionsBackup from './OptionsBackup';
+import { dataUser } from '../../config/dataUser';
 import { createBackup } from '../../services/backupProcess/backupProcess';
 import OptionsProfile from './OptionsProfile';
 
@@ -8,10 +10,16 @@ export default function Example() {
     
     const setShowBackupView = appZustandStore.useModalStore( state => state.setShowBackupView );
     const setShowProfileView = appZustandStore.useModalStore( state => state.setShowProfileView );
+    const userProfile = appZustandStore.useUserStore(state => state.userProfile);
     const wscStore = appZustandStore.useSocketStore(state => state.wscStore);
     const setCerrarSesion = appZustandStore.useUserStore( state => state.setCerrarSesion );
     const setDarkMode = appZustandStore.useAppDarkStore( state => state.setDarkMode );
     const darkMode = appZustandStore.useAppDarkStore( state => state.darkMode );
+    const setContactos = appZustandStore.useContactListStore( state => state.setContactos );
+    const setContactosFiltrados = appZustandStore.useContactListStore( state => state.setContactosFiltrados );
+    const setWscStore = appZustandStore.useSocketStore( state => state.setWscStore );
+    const setHistoryMessage = appZustandStore.useChatStore( state => state.setHistoryMessage );
+    const setUserProfile = appZustandStore.useUserStore( state => state.setUserProfile );
 
     const handleDarkMode = async () => {
         setDarkMode( !darkMode );
@@ -21,7 +29,16 @@ export default function Example() {
     const handleCerrarSesión = async () => {
         setCerrarSesion(true);
         await createBackup();
+        await logout(userProfile!.id);
         wscStore!.close(1000, "Usuario cerro la sesión");
+        await dataUser.clearAllBD();
+        localStorage.removeItem("darkMode");
+
+        setContactos([]);
+        setContactosFiltrados([]);
+        setWscStore(null);
+        setHistoryMessage([]); 
+        setUserProfile(null);
     };
 
     return (

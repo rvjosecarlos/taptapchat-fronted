@@ -13,6 +13,7 @@ import { decryptMessage } from "../services/encryption/desencriptar";
 import Spinner from "./Spinner";
 import { logout } from "../api/authAPI";
 import Logo from "./Logo";
+import { createBackup } from "../services/backupProcess/backupProcess";
 
 let render = 0;
 
@@ -257,9 +258,7 @@ export default function ChatApp(){
                         actualizarStatusContactos({resWS, estado: false});
                     }
                     else if( resWS.type && resWS.type === "duplicate-session" ){
-                        await logout(userProfile!.id);
-                        wsc.close();
-                        await dataUser.clearAllBD();
+                        await Promise.allSettled([ logout(userProfile!.id), dataUser.clearAllBD() ]);
                         alert("Se ha iniciado sesión en otro dispositivo o navegador");
                         console.log("Sesion duplicada");
                         setUserProfile(null);
@@ -267,6 +266,7 @@ export default function ChatApp(){
                         setContactosFiltrados([]);
                         setWscStore(null);
                         setHistoryMessage([]);  
+                        wsc.close();
                     }
                     else if( resWS.type && resWS.type === "update-user" ){
                         // Actualiza el nombre del contacto
@@ -287,18 +287,7 @@ export default function ChatApp(){
                         console.warn("Reconectando");
                         await suscribeWebSocket();
                     }, 5000);
-                }
-                else{
-                    logout(userProfile!.id).then( () => console.log("Sesión cerrada") );
-                    dataUser.clearAllBD().then(() => console.log("BD limpiada"));
-                    localStorage.removeItem("darkMode");
-                    location.reload();
-                    setContactos([]);
-                    setContactosFiltrados([]);
-                    setWscStore(null);
-                    setHistoryMessage([]); 
-                    setUserProfile(null);
-                }
+                };
             });
         }
 
