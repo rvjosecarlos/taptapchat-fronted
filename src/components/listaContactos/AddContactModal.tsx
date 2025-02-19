@@ -20,7 +20,6 @@ export default function AddContactModal(){
 
     const handleClick = async () => {
         try{
-            console.log("Agregando contacto");
             const addContact = dataUser.addContact;
 
             if( Object.values(email).includes("") ){
@@ -33,10 +32,8 @@ export default function AddContactModal(){
                 return;
             };
 
-            console.log("agregando");
             setSpinner(true);
             const res: ServerResponse = await searchContact(email);
-            console.log(res);
             if( !res.success && res.errors ){
                 setError(res.errors[0].msg);
                 setSpinner(false);
@@ -69,7 +66,6 @@ export default function AddContactModal(){
                 return typeof res.data === "object" && contacto.id === res.data!.id 
             });
             if( contactExist ){
-                console.log("Desde ts");
                 setError("El contacto ya existe en tu lista de contactos");
                 setSpinner(false);
                 return;
@@ -77,7 +73,6 @@ export default function AddContactModal(){
     
             // Agregar el contacto a la BD local de indexedDB
             const resBD = await addContact(newContact);
-            console.log(resBD);
     
             // Renderiza el nuevo contacto
             setContactosFiltrados([...contactos, newContact]);
@@ -87,7 +82,7 @@ export default function AddContactModal(){
             setEmail("");
         }
         catch(error){
-            console.log(error);
+            console.error(error);
             if( typeof error === "string" ){
                 setError(error);
             };

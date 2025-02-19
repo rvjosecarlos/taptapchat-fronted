@@ -103,7 +103,6 @@ export default function Example() {
                                 aria-label="Copia de seguridad"
                                 className={`${ darkMode ? "text-white data-[focus]:bg-[#333333]" : "bg-white/80 data-[focus]:bg-slate-200" } group flex w-full items-center gap-2 py-1.5 px-3 `}
                                 onClick={() => {
-                                    console.log("copia de serguirdad");
                                     setShowBackupView(true)
                                 }}
                             >

@@ -51,7 +51,6 @@ export default function OptionsProfile(){
         };
 
         // Aqui la logica para llamar a la api
-        console.log(userDataProfile.name);
         const res: ServerResponse = await editUserName(userProfileStore!.id, userDataProfile.name );
 
         if( !res.success && res.errors ){
@@ -90,7 +89,6 @@ export default function OptionsProfile(){
 
     const handleEditPass = async () => {
         setProcess("editpass");
-        console.log(userDataProfile);
         if( !userDataProfile.token || !userDataProfile.password || !userDataProfile.passwordConfirm ){
             setError("editpass");
             setErrorDetail("Todos los campos son obligatorios");
@@ -127,16 +125,12 @@ export default function OptionsProfile(){
         }
         const res: ServerResponse = await changePassword(dataChangePassword);
         if( !res.success && res.errors ){
-            console.log("Error al actualizar la contraseña");
-            console.log(res);
             setError("editpass");
             setErrorDetail(res.errors[0].msg);
             setProcess("");
             return;
         };
 
-        console.log("Contraseña actualizada");
-        console.log(res);
         setProcessOk(true);
         setError("");
         setErrorDetail("");
@@ -159,7 +153,6 @@ export default function OptionsProfile(){
         setErrorDetail("");
         setProcess("");
         setSendToken(true);
-        console.log("Enviando token");
     };
 
     const handleUploadFoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,7 +161,6 @@ export default function OptionsProfile(){
         setError("");
 
         if( !e.target || !e.target.files ){
-            console.log("No hay imagen seleccionada");
             setError("editfoto");
             setErrorDetail("Seleccione una imagen");
             setProcess("");
@@ -176,7 +168,6 @@ export default function OptionsProfile(){
         };
 
         if( !typeFiles.includes(e.target.files[0].type) ){
-            console.log("No es una imagen");
             setError("editfoto");
             setErrorDetail("Formato de imagen no válido");
             setProcess("");
@@ -190,12 +181,9 @@ export default function OptionsProfile(){
             return;
         };
 
-        console.log("Si es una imagen", e.target.files[0]);
         const formData = new FormData();
         formData.append("avatar",e.target.files[0]);
         formData.append("userId", userProfileStore!.id);
-
-        console.log(formData);
 
         const res: ServerResponse = await uploadImage(formData);
 

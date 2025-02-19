@@ -12,7 +12,6 @@ export const getPendingMessages = async (userId: string) => {
     }
     catch(error){
         if( isAxiosError(error) && error.response ){
-            console.log(error.response.data);
             return error.response.data;
         };
     };

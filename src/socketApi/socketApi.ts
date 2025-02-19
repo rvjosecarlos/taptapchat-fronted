@@ -47,7 +47,7 @@ export const createWSC = async (config: CreateWSCParams) => {
         return { wsc, idInterval };
     }
     catch(error){
-        console.log(error);
+        console.error(error);
         return { wsc: null, idInterval: null, error: "Error al crear wl WS" }
     }
 }

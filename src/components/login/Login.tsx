@@ -52,7 +52,6 @@ export default function Login(){
             }
             return;
         }
-        console.log(res.message);
 
         // Obtener los datos del usuario si ya ha sido autenticado
         const result: ServerResponse = await loadDataUser();
@@ -68,30 +67,26 @@ export default function Login(){
                     usuario = await dataUser.loadUserProfile(result.data.id);
                 }
 
-                console.log("Usuario buscado", usuario[0]);
                 setUserProfile(usuario[0]);
             }
             else{
                 setError(result.errors![0].msg);
                 setSpinner(false);
                 setUserProfile(null);
-                console.log("Usuario no autorizado");
             }
         }
         catch(error){
-            console.log(error);
+            console.error(error);
             setError("Error");
             setSpinner(false);
         };        
     };
 
     const handleClick = () => {
-        console.log("Nuevo usuaro a registrar");
         setNewUser(true);
     }
 
     const handleResetPassword = () => {
-        console.log("Recuperar contraseña");
         setResetPassword(true);
     }
 

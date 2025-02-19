@@ -40,7 +40,6 @@ export default function MessageHistory(){
     const suscribeSpinner = () => {
         const observador = new IntersectionObserver( arr => {
             if( arr[0].isIntersecting && !firstRender ){
-                console.log("Observando");
                 getMoreMessages();
             };
             firstRender = false;
@@ -85,7 +84,6 @@ export default function MessageHistory(){
 
             // Restar la altura anterior para ir colocando el scroll en el mismo sitio donde cargan los mensajes
             if( ref.current ){
-                console.log(alturaScroll, ref.current.scrollHeight, ref.current.scrollTop);
                 ref.current!.scrollTop = ref.current.scrollHeight - alturaScroll;
                 alturaScroll = ref.current.scrollHeight;
             };

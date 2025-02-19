@@ -18,8 +18,7 @@ let render = 0;
 
 // API Notification
 const confignotification = async () => {
-    const res = await Notification.requestPermission();
-    console.log("REspuesta de notificacion", res);
+    await Notification.requestPermission();
 };
 
 export default function ChatApp(){
@@ -41,7 +40,7 @@ export default function ChatApp(){
     const [ reconectando, setReconectando ] = useState(false);
 
     useEffect(() => {
-        console.log("Se ejecuta el use effect");
+        
         // Carga el tema
         const darkModeString = localStorage.getItem("darkMode");
         setDarkMode(darkModeString ? JSON.parse(darkModeString) : false);
@@ -51,7 +50,6 @@ export default function ChatApp(){
               '--vh',
               `${window.innerHeight * 0.01}px`
             );
-            console.log(window.innerHeight, "ALTURA");
         });
         
         // Solo se ejecuta en el primer renderizado
@@ -65,7 +63,6 @@ export default function ChatApp(){
         // Carga los contactos
         const getContactos = async () => {
             const loadContacts = await dataUser.loadContactList(userProfile!.id);
-            console.log("contactos cargados", loadContacts);
             setContactos(loadContacts);
             setContactosFiltrados(loadContacts);
             return loadContacts;
@@ -73,7 +70,6 @@ export default function ChatApp(){
 
         // Carga mensajes pendientes desde el servidor remoto
         const getAndInsertPendingMessages = async () => {
-            console.log("Obtener los mensajes pendientes");
             const res: ServerResponse = await getPendingMessages(userProfile!.id);
             if( res.success && res.data ){
                 const mensajes: Message[] = JSON.parse(JSON.stringify(res.data));
@@ -83,7 +79,6 @@ export default function ChatApp(){
                 mensajes.map( async (mensaje) => {
                     // Valida que todos los usuarios existan y si no crea el contacto
                     if( !appZustandStore.useContactListStore.getState().contactos.find( contacto => contacto.id === mensaje.contactId ) ){
-                        console.log("Creando contactos");
                         const resSearchContact: ServerResponse = await searchContactById(mensaje.contactId);
                         const msg = { message: await decryptMessage(mensaje.message) }
                         createNewContact(resSearchContact, msg );
@@ -98,8 +93,6 @@ export default function ChatApp(){
                         dataUser.addNewMessage(mensaje)
                     ]
                 }).flat();
-                
-                console.log("promesas", promesas);
                 await Promise.all( promesas );     
             };
         };
@@ -136,26 +129,23 @@ export default function ChatApp(){
             const { wsc, idInterval } = await createWSC(configWSC);
 
             if( typeof wsc === "string" || !wsc ){
-                console.log("Error al crear el Websocket");
+                console.error("Error al crear el Websocket");
                 return;
             };
 
             refIdInterval.current = idInterval;
 
             setWscStore(wsc);            
-            console.log("Se suscribe el websocket para mensajes entrantes");
 
             wsc.addEventListener("message", async (data) => {
-                //console.log("Mensaje desde el servidor",data);
+                
                 if( data && typeof data.data === "string" ){
                     const resWS: WSServerResponse = JSON.parse(data.data);
-                    //console.log("resWS", resWS);
 
                     if( resWS.type && resWS.type === "heartbeat" ){
                         console.log("Buenas cliente, soy el server sigo vivo");
                     }
                     else if( resWS.type && resWS.type === "message" ){
-                        console.log("ES un mensaje entrante", resWS.message);
 
                         if( Notification.permission === "default" ){
                             confignotification();
@@ -197,8 +187,6 @@ export default function ChatApp(){
                             actualizarStatusContactos({ resWS, leido: false });
                         }
                                               
-
-                        console.log("se agrega el mensaje:", mensaje);
                         addNewMessage({ ...mensaje, message: resWS.message.message });
 
                         // Notificar al usuario
@@ -206,7 +194,6 @@ export default function ChatApp(){
 
                             const contacto = appZustandStore.useContactListStore.getState().contactos.find( contacto => contacto.id === resWS.originUserId );
 
-                            console.log("Permiso concedido");
                             new Notification("TapTapChat: ", {
                                 body: `${JSON.parse(JSON.stringify(resSearchContact.data))!.name} : ${ mensaje.message.length > 70 ? mensaje.message.substring(0, 70) + "..." : mensaje.message.substring(0, 70)}`,
                                 icon: contacto?.imgUrl
@@ -219,7 +206,7 @@ export default function ChatApp(){
                         /* Aquí se recibe la respuesta de los contacto que a su vez recibieron el mensaje
                         #  de aviso de contacto en línea
                         */
-                        console.log("Se recibe mensaje de en linea de un contacto que acaba de conectarse", resWS);
+                    
                         //await dataUser.updateContact({ originUserId: resWS.originUserId, status: true });
                         
                         // Aqui va la logica para actualizar el nombre si es que lo trae consigo
@@ -237,8 +224,7 @@ export default function ChatApp(){
 
                     }
                     else if(resWS.type && resWS.type === "contactAlive"){
-                        console.log("Se recibe un mensaje de respuesta de estado en linea de", resWS.originUserId);
-                        console.log(resWS);
+                        
                         //await dataUser.updateContact({ originUserId: resWS.originUserId, status: true });
                         actualizarStatusContactos({resWS, estado: true});
                     }
@@ -249,7 +235,6 @@ export default function ChatApp(){
                     else if( resWS.type && resWS.type === "duplicate-session" ){
                         await Promise.allSettled([ logout(userProfile!.id), dataUser.clearAllBD() ]);
                         alert("Se ha iniciado sesión en otro dispositivo o navegador");
-                        console.log("Sesion duplicada");
                         setUserProfile(null);
                         setContactos([]);
                         setContactosFiltrados([]);
@@ -259,8 +244,7 @@ export default function ChatApp(){
                     }
                     else if( resWS.type && resWS.type === "update-user" ){
                         // Actualiza el nombre del contacto
-                        console.log("Se recibe mensaje para actualizar nombre de contacto", resWS.updateNameContact);
-                        console.log("Tipo del mensaje recibido", typeof resWS.message);
+                        
                         await dataUser.updateContact({ userId: resWS.originUserId, nameContact: resWS.updateNameContact, imgUrl: resWS.updateImgUrl });
                         actualizarStatusContactos({ resWS, nameContact: resWS.updateNameContact, imgUrl: resWS.updateImgUrl });
                     }
@@ -269,7 +253,6 @@ export default function ChatApp(){
 
             // Cuando se cierra el websocket
             wsc.addEventListener("close", (e) => {
-                console.log("Conexión cerrada con el servidor");
                 if( e.code !== 1000 && e.code !== 3001 ){
                     setReconectando(true);                    
                     setTimeout(async () => {  
@@ -285,7 +268,6 @@ export default function ChatApp(){
         
         return () => {
             if (refIdInterval.current) clearInterval( refIdInterval.current ); 
-            console.log(`Funcion limpiadora, ${appZustandStore.useSocketStore.getState().wscStore}`);
             appZustandStore.useSocketStore.getState().wscStore?.close(1000, "Cierre de conexion por funcion limpiadora");
             setContactos([]);
             setContactosFiltrados([]);
@@ -303,14 +285,12 @@ export default function ChatApp(){
                 if( typeof leido === "boolean" ) contacto.leido = leido;
                 if( nameContact ) contacto.nameContact = nameContact;
                 if( imgUrl ) contacto.imgUrl = imgUrl;
-                console.log("nombre del contacto", nameContact);
             }
             return contacto;
         }));
 
         setContactosFiltrados( appZustandStore.useContactListStore.getState().contactosFiltrados.map( contacto => {
             if( contacto.id === resWS.originUserId ){
-                console.log("Se actualiza el estado de un contacto", {resWS, estado, mensaje, leido});
                 if( typeof estado === "boolean" ) contacto.online = estado;
                 if( mensaje ) contacto.lastMessage = mensaje;
                 if( typeof leido === "boolean" ) contacto.leido = leido;
@@ -346,8 +326,6 @@ export default function ChatApp(){
             "userId": userProfile!.id,
             "imgUrl": JSON.parse(JSON.stringify(resSearchContact.data)).imgUrl
         };
-
-        console.log("Nuevo contacto",newContact);
 
         dataUser.addContact(newContact);
 

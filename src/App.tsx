@@ -16,11 +16,11 @@ function App() {
   const setNewUser = appZustandStore.useUserStore( state => state.setNewUser );
   const createDataBase = dataUser.createDataBase;
   const params = new URLSearchParams(location.href);
-  console.log(location.href);
+  
   const nu = params.get("nu");
   //const sp = params.get("sp");
   const token = params.get("token");
-  console.log(nu,token);
+  
 
   if( nu && token ){
     setNewUser(JSON.parse(nu));
@@ -31,20 +31,16 @@ function App() {
       await createDataBase();
     };
     iniciarBD();
-    console.log("nuevo usuario", newUser);
+    
 
     // Cargar el perfil si existe un token de sesion
     const iniciarSesionConToken = async () => {
       const res: ServerResponse = await loadDataUser();
-      console.log(res);
+      
       if( res && res.success && res.data && typeof res.data === "object" ){
         // Cargar el usuario logueado
         let usuario = await dataUser.loadUserProfile(res.data.id);
-        console.log("Usuario buscado", usuario[0]);
         setUserProfile(usuario[0]);
-      }
-      else{
-        console.log("Error controlado");
       }
     };
     iniciarSesionConToken();

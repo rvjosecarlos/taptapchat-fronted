@@ -27,21 +27,18 @@ export default function OptionsBackup(){
     };
 
     const handleCrearBackup = async () => {
-        console.log("respaldando");
         setSpinner(true);
         const res = await createBackup();
         if( !res.success && res.errors ){
             setError(JSON.stringify(res.errors[0].msg));
         }
         else{
-            console.log(res.message);
             setProcessOk(true);           
         }
         setSpinner(false);
     };
 
     const handleImportBackup = async () => {
-        console.log("Importando");
         setSpinner(true);
         setImportProcess(true);
         const res = await insertDataImport(userProfile!.id);
@@ -49,7 +46,6 @@ export default function OptionsBackup(){
             setError(JSON.stringify(res.errors[0].msg));
         }
         else{
-            console.log(res.message);
             setProcessOk(true);
         }
         setSpinner(false);

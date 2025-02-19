@@ -5,7 +5,6 @@ export const encryptMessage = async ( mensaje: Message['message']) => {
     const mensajeCodificado = new TextEncoder().encode(mensaje);
     const eevee = crypto.getRandomValues(new Uint8Array(12)); // Crea un vector inical para encriptar y que siempre sea diferente
     const secretKey = await generateKey();
-    //console.log("SECRETA", secretKey);
 
     const encriptado = await crypto.subtle.encrypt(
         {

@@ -12,7 +12,7 @@ export const loadDataUser = async () => {
     }
     catch(error){
         if( isAxiosError(error) && error.response ){
-            console.log(error);
+            console.error(error);
         }
         else{
             return { success: false, errors: [{ msg: "Error" }] }
@@ -45,7 +45,7 @@ export const searchContactById = async (userId: string) => {
     }
     catch(error){
         if(isAxiosError(error) && error.response){
-            console.log(error.response.data);
+            console.error(error.response.data);
         };
     };
 };
@@ -61,7 +61,7 @@ export const editUserName = async ( userId: User['id'], name: User['name'] ) => 
     }
     catch(error){
         if( isAxiosError(error) && error.response ){
-            console.log(error.response.data);
+            console.error(error.response.data);
             return error.response.data;
         };
     };
@@ -77,7 +77,7 @@ export const uploadImage = async ( formData: FormData ) => {
     }
     catch(error){
         if( isAxiosError(error) && error.response ){
-            console.log(error.response.data);
+            console.error(error.response.data);
             return error.response.data;
         };
     };

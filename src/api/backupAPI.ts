@@ -12,7 +12,6 @@ export const downloadBackup = async (userId: User['id']) => {
     }
     catch(error){
         if( isAxiosError(error) && error.response ){
-            console.log(error.response);
             return error.response.data;
         }
     }
@@ -28,7 +27,6 @@ export const uploadBackup = async ( userId: User['id'], encryptedBD: string ) =>
     }
     catch(error){
         if(isAxiosError(error) && error.response){
-            console.log(error.response.data);
             return error.response.data;
         }
     }

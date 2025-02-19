@@ -44,11 +44,8 @@ export default function Registro({ tokenParam }: RegistroProps){
             return;
         };
 
-        
-        console.log(dataUsuario);
         setSpinner(true);
         const res: ServerResponse = await createAccount(dataUsuario);
-        console.log(res);
         setSpinner(false);
         
         if( !res.success && res.errors){
@@ -72,7 +69,6 @@ export default function Registro({ tokenParam }: RegistroProps){
     };
 
     const handleClick = async () => {
-        console.log("Enviado el codigo", token);
         setSpinner(true);
         setHiddenAceptar(true);
         const res: ServerResponse = await confirmAccount(token);

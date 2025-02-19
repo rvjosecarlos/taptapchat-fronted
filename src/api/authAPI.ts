@@ -30,7 +30,6 @@ export const confirmAccount =  async (token: string) => {
 
 export const login = async ( dataLogin: {email: string, password: string}) => {
     try{
-        console.log(dataLogin);
         const url = "/auth/login";
         const { data } = await api.post(url, dataLogin, {
             withCredentials: true
@@ -51,7 +50,6 @@ export const requestNewToken = async ( email: string ) => {
         return data;
     }
     catch(error){
-        console.log(error);
         if(isAxiosError(error) && error.response){
             return error.response.data;
         };
@@ -81,7 +79,6 @@ export const logout = async (userId: User['id']) => {
     }
     catch(error){
         if(isAxiosError(error) && error.response){
-            console.log(error.response);
             return error.response.data;
         }
     }

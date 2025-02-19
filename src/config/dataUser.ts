@@ -10,7 +10,7 @@ export class dataUser {
             const db = window.indexedDB.open("taptapchat", 1);
 
             db.onerror = () => {
-                console.log("Error al crear la base de datos");
+                console.error("Error al crear la base de datos");
                 reject(new Error("Error al crear la base de datos"));
             };
 
@@ -62,11 +62,11 @@ export class dataUser {
             const transaccion = dbChat.transaction(['user'], "readwrite");
 
             transaccion.oncomplete = () => {
-                console.log("Transaccion completada");
+                //console.log("Transaccion completada");
             };
 
             transaccion.onerror = () => {
-                console.log("Error al crear la transaccion");
+                console.error("Error al crear la transaccion");
             };
 
             const usuariObjectStore = transaccion.objectStore('user');
@@ -75,12 +75,12 @@ export class dataUser {
 
 
             request.onsuccess = () => {
-                console.log("Usuario creado");
+                //console.log("Usuario creado");
                 resolve("Usuario creado");
             }
 
             request.onerror = () => {
-                console.log("Error al registrar los datos del usuario");
+                console.error("Error al registrar los datos del usuario");
                 reject("Error al obtener los datos del usuario");
             }
         });
@@ -108,10 +108,9 @@ export class dataUser {
 
                 request.onsuccess = () =>{
 
-                    console.log(userId, name);
+                    //console.log(userId, name);
 
                     const user = request.result as User;
-                    console.log(user);
 
                     if( name ) user.name = name;
                     if( imgUrl ) user.imgUrl = imgUrl;
@@ -119,12 +118,12 @@ export class dataUser {
                     const updateRequest = userObjectStore.put(user);
 
                     updateRequest.onerror = () => {
-                        console.log("Error al actualizar el registro");
+                        console.error("Error al actualizar el registro");
                         reject("Error al actualizar el registro");
                     };
 
                     updateRequest.onsuccess = () => {
-                        console.log("Contacto actualizado");
+                        //console.log("Contacto actualizado");
                         resolve("Nombre de usuario actualizado");
                     }; 
 
@@ -134,7 +133,7 @@ export class dataUser {
 
             }
             catch(error){
-                console.log(error);
+                console.error(error);
             }
         })
     }
@@ -148,12 +147,12 @@ export class dataUser {
             const transaccion = dbChat.transaction(['user'], "readonly");
 
             transaccion.oncomplete = () => {
-                console.log("Transaccion completada");
+                //console.log("Transaccion completada");
             };
 
             transaccion.onerror = (e) => {
-                console.log("Error al crear la transaccion");
-                console.log(e);
+                console.error("Error al crear la transaccion");
+                //console.log(e);
             };
 
             const usuariObjectStore = transaccion.objectStore('user');
@@ -165,7 +164,7 @@ export class dataUser {
             const result: User[] = [];
 
             cursorRequest.onerror = () => {
-                console.log("Error al cargar los datos del usuario");
+                console.error("Error al cargar los datos del usuario");
                 reject("Error al cargar los datos del usuario");
             }
 
@@ -193,7 +192,7 @@ export class dataUser {
             const result: Contact[] = []
 
             transaccion.onerror = () => {
-                console.log("Error al cargar la lista de contactos");
+                console.error("Error al cargar la lista de contactos");
                 reject("Error al cargar la lista de contactos");
             };
 
@@ -208,7 +207,7 @@ export class dataUser {
             const cursorRequest = index.openCursor(userId);
 
             cursorRequest.onerror = () => {
-                console.log("Error al solicitar el contacto");
+                console.error("Error al solicitar el contacto");
                 reject("Error al solicitar el contacto")
             }
 
@@ -250,7 +249,7 @@ export class dataUser {
             const transaccion = dbChat.transaction(['mensajes'], 'readonly');
 
             transaccion.onerror = () => {
-                console.log("Error al crear la transacción");
+                console.error("Error al crear la transacción");
                 reject("Error al obtener el total de mensajes");
             };
 
@@ -268,7 +267,7 @@ export class dataUser {
             };
 
             request.onerror = () => {
-                console.log("Error al obtener el total de mensajes");
+                console.error("Error al obtener el total de mensajes");
                 reject("Error al obtener el total de mensajes");
             };
         });
@@ -285,7 +284,7 @@ export class dataUser {
             const transaccion = dbChat.transaction(['mensajes'], "readonly");
 
             transaccion.onerror = () => {
-                console.log("Error al cargar la lista de mensajes");
+                console.error("Error al cargar la lista de mensajes");
                 reject(new Error("Error al cargar la lista de mensajes"));
             };
 
@@ -298,7 +297,7 @@ export class dataUser {
             let indexCount = 0; // Contador de los mensajes procesados
 
             request.onerror = () => {
-                console.log("Error al solicitar el contacto");
+                console.error("Error al solicitar el contacto");
                 reject(new Error("Error al solicitar el contacto"));
             };
 
@@ -332,7 +331,7 @@ export class dataUser {
             const transaccion = dbChat.transaction(['mensajes'], "readonly");
 
             transaccion.onerror = () => {
-                console.log("Error al cargar la lista de mensajes");
+                console.error("Error al cargar la lista de mensajes");
                 reject(new Error("Error al cargar la lista de mensajes"));
             };
 
@@ -346,7 +345,7 @@ export class dataUser {
             let indexCount = 0; // Contador de los mensajes procesados
 
             request.onerror = () => {
-                console.log("Error al solicitar el contacto");
+                console.error("Error al solicitar el contacto");
                 reject(new Error("Error al solicitar el contacto"));
             };
 
@@ -380,7 +379,7 @@ export class dataUser {
             const transaccion = dbChat.transaction(['contact'], "readwrite");
 
             transaccion.onerror = () => {
-                console.log("Error al crear la transaccion addContact");
+                console.error("Error al crear la transaccion addContact");
                 reject("Error al crear la transaccion");
             };
 
@@ -388,7 +387,7 @@ export class dataUser {
             const request = contactObjectStore.add(contact);
 
             request.onerror = (e) => {
-                console.log("Error al agregar los datos");
+                console.error("Error al agregar los datos");
                 const target = e.target as IDBRequest;
                 if( target.error && target.error.message.includes("uniqueness requirements")){
                     reject("Este contacto ya existe en tu lista de contactos");
@@ -398,7 +397,7 @@ export class dataUser {
             };
 
             request.onsuccess = () => {
-                console.log("Datos agregados correctamente");
+                //console.log("Datos agregados correctamente");
                 resolve("Contacto agregado");
             };
         });
@@ -412,7 +411,7 @@ export class dataUser {
             const transaccion = dbChat.transaction(['contact'], 'readwrite');
 
             transaccion.onerror = (e) => {
-                console.log(e);
+                console.error(e);
                 reject("Error al crear la transaccion para actualiza contacto");
             };
 
@@ -423,7 +422,7 @@ export class dataUser {
 
             request.onerror = (e) => {
                 const target = e.target as IDBRequest;
-                console.log("Error al solicitar el indice actualizar el contacto: ", target.error);
+                console.error("Error al solicitar el indice actualizar el contacto: ", target.error);
                 resolve("Error al solicitar el indice para actualizar el contacto");
             };
 
@@ -438,16 +437,16 @@ export class dataUser {
                     if( contactData.nameContact ) registro.nameContact = contactData.nameContact;
                     if( contactData.imgUrl ) registro.imgUrl = contactData.imgUrl;
 
-                    console.log("Registro para actualizar", registro);
+                    
                     const updateRequest = contactoObjectStore.put(registro);
 
                     updateRequest.onerror = () => {
-                        console.log("Error al actualizar el registro");
+                        console.error("Error al actualizar el registro");
                         reject("Error al actualizar el registro");
                     };
 
                     updateRequest.onsuccess = () => {
-                        console.log("Contacto actualizado");
+                        //console.log("Contacto actualizado");
                         resolve("Contacto actualizado");
                     };  
                 }
@@ -466,7 +465,7 @@ export class dataUser {
             const transaccion = dbChat.transaction(['mensajes'], "readwrite");
 
             transaccion.onerror = () => {
-                console.log("Error al crear la transacción para mensajes");
+                console.error("Error al crear la transacción para mensajes");
                 reject("Error al crear la transacción");
             };
 
@@ -474,12 +473,11 @@ export class dataUser {
             const request = mensajesObjectStore.add(mensaje);
 
             request.onerror = () => {
-                console.log("Error al agregar el mensaje nuevo");
+                console.error("Error al agregar el mensaje nuevo");
                 reject("Error al agregar el mensaje nuevo");
             };
 
             request.onsuccess = () => {
-                console.log("Mensaje nuevo agregado");
                 resolve("Mensaje agregado");
             };
         });
@@ -504,7 +502,7 @@ export class dataUser {
             const transaccion = dbChat.transaction(['user', 'mensajes', 'contact'], "readonly");
 
             transaccion.onerror = () => {
-                console.log("Error al crear la transaccion backup");
+                console.error("Error al crear la transaccion backup");
                 reject("Error al crear la transacción en Backup");
             }
 
@@ -520,17 +518,17 @@ export class dataUser {
 
             // Atrapa los errores que pudieran presentarse
             cursorUser.onerror = () => {
-                console.log("Error al abrir el cursor de usuario");
+                console.error("Error al abrir el cursor de usuario");
                 reject("Error al abrir el cursor de usuario");
             };
 
             cursorMensajes.onerror = () => {
-                console.log("Error al abrir el cursor de mensajes");
+                console.error("Error al abrir el cursor de mensajes");
                 reject("Error al abrir el cursor de mensajes");
             };
 
             cursorContactos.onerror = () => {
-                console.log("Error al abrir el cursor de contactos");
+                console.error("Error al abrir el cursor de contactos");
                 reject("Error al abrir el cursor de contactos");
             };
 
@@ -596,7 +594,6 @@ export class dataUser {
             });
 
             await Promise.all([obtenerUsuario, obtenerContactos, obtenerMensajes]);
-            console.log("Termino satisfactoriamente", dbBackup);
             resolve(dbBackup);
         });
     };
@@ -612,7 +609,7 @@ export class dataUser {
                 const requestContactos = contactObjectStore.clear();
 
                 requestMensajes.onerror = () => {
-                    console.log("Error al limpiar los mensajes");
+                    console.error("Error al limpiar los mensajes");
                     reject("Error al limpiar los mensajes");
                 };
 
@@ -621,7 +618,7 @@ export class dataUser {
                 };
                 
                 requestContactos.onerror = () => {
-                    console.log("Error al limpiar los contacto");
+                    console.error("Error al limpiar los contacto");
                     reject("Error al limpiar los contactos");
                 };
 
@@ -631,7 +628,7 @@ export class dataUser {
                 
             }
             catch(error){
-                console.log(error);
+                console.error(error);
                 reject("Error al limpiar la BD");
             }
         });
@@ -650,17 +647,17 @@ export class dataUser {
                 const requestUser = userObjectStore.clear();
 
                 requestMensajes.onerror = () => {
-                    console.log("Error al limpiar los mensajes");
+                    console.error("Error al limpiar los mensajes");
                     reject("Error al limpiar los mensajes");
                 };
 
                 requestContactos.onerror = () => {
-                    console.log("Error al limpiar los contactos");
+                    console.error("Error al limpiar los contactos");
                     reject("Error al limpiar los contactos");
                 };
 
                 requestUser.onerror = () => {
-                    console.log("Error al limpiar el usuario");
+                    console.error("Error al limpiar el usuario");
                     reject("Error al limpiar el usuario");
                 };
 
@@ -673,7 +670,7 @@ export class dataUser {
                 resolve("BD limpiada por completo");
             }
             catch(error){
-                console.log(error);
+                console.error(error);
             }   reject("Error al eliminar la BD");
         })
     }

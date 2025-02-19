@@ -28,7 +28,6 @@ export default function FormChat(){
         // Aqui se debe disparar el evento del web socket
 
         e.preventDefault();
-        console.log('Enviando mensaje...');
         if( msj ){
             const mensaje = {
                 id: activeContact!.id + Date.now(),
@@ -58,7 +57,7 @@ export default function FormChat(){
                 }
             }
             catch(error){
-                console.log(error);
+                console.error(error);
             }
 
             flushSync( () => {

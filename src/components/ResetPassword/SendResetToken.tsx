@@ -15,7 +15,6 @@ export default function SendResetToken(){
         }
 
         setSpinner(true);
-        console.log("Enviando nuevo token");
         setSpinner(false);
         setEnviado(true);
     }

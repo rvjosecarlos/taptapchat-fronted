@@ -19,7 +19,6 @@ export default function SendResetEmail(){
         }
 
         setSpinner(true);
-        console.log("Enviando nuevo token");
         const res: ServerResponse = await requestNewToken(emailReset);
         setSpinner(false);
 
