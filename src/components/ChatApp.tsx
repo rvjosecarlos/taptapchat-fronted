@@ -3,7 +3,7 @@ import { appZustandStore } from "../store";
 import Chat from "./areaChat/Chat";
 import ChatInitial from "./areaChat/ChatInitial";
 import ContactList from "./listaContactos/ContactList";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Message, ServerResponse, WSServerResponse } from "../types";
 import { dataUser } from "../config/dataUser";
 import { createWSC } from "../socketApi/socketApi";
@@ -38,6 +38,7 @@ export default function ChatApp(){
     const darkMode = appZustandStore.useAppDarkStore( state => state.darkMode );
     const setDarkMode = appZustandStore.useAppDarkStore( state => state.setDarkMode );
     const refIdInterval = useRef(null);
+    const [ reconectando, setReconectando ] = useState(false);
 
     useEffect(() => {
         console.log("Se ejecuta el use effect");
@@ -110,7 +111,16 @@ export default function ChatApp(){
 
             // Conectar al servidor websocket
             const idsContactos = loadContacts.map( contacto => contacto.id);
-            const { wsc, idInterval } = await createWSC(userProfile!.id, idsContactos, userProfile!.name, userProfile?.imgUrl);
+
+            const configWSC = {
+                clientId: userProfile!.id, 
+                contactos: idsContactos, 
+                username: userProfile!.name, 
+                imgUrl: userProfile?.imgUrl,
+                setReconectando
+            }
+
+            const { wsc, idInterval } = await createWSC(configWSC);
 
             if( typeof wsc === "string" || !wsc ){
                 console.log("Error al crear el Websocket");
@@ -269,13 +279,15 @@ export default function ChatApp(){
             });
 
             // Cuando se cierra el websocket
-            wsc.addEventListener("close", () => {
+            wsc.addEventListener("close", (e) => {
                 console.log("Conexión cerrada con el servidor");
-                setContactos([]);
-                setContactosFiltrados([]);
-                setWscStore(null);
-                setHistoryMessage([]); 
-                setUserProfile(null);
+                if( e.code !== 1000 && e.code !== 3001 ){
+                    setReconectando(true);                    
+                    setTimeout(async () => {  
+                        console.warn("Reconectando");
+                        await suscribeWebSocket();
+                    }, 5000);
+                };
             });
         }
 
@@ -350,6 +362,12 @@ export default function ChatApp(){
                 <>
                     <ContactList />
                     { activeContact ? <Chat /> : <ChatInitial/> }
+                    { reconectando && 
+                        <div className={`w-full h-full fixed top-0 left-0 flex flex-col justify-center items-center gap-5 ${ darkMode ? "bg-black/50" : "bg-white/90" }`}>
+                            <p className={`${ darkMode ? "text-white" : "text-black" }`}>Reconectando...</p>
+                            <Spinner />
+                        </div>
+                    }
                 </>
             }
         </div>

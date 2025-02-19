@@ -2,13 +2,25 @@ import { User } from "../types";
 
 const wssUrl = import.meta.env.VITE_WS_SERVER;
 
-export const createWSC = async (clientId: string, contactos: string[], username: User['name'], imgUrl?: User['imgUrl']) => {
+type CreateWSCParams = {
+    clientId: User['id'],
+    contactos: string[],
+    username: User['name'],
+    imgUrl?: User['imgUrl'],
+    setReconectando: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const createWSC = async (config: CreateWSCParams) => {
+    const { clientId, contactos, username, setReconectando } = config;
+    const imgUrl = config.imgUrl;
     try{
         // el parametro token no se esta ocupando
         const wsc = new WebSocket(wssUrl + `?token=${"token"}&clientId=${clientId}`);
         let idInterval: NodeJS.Timeout | null = null;
         wsc.addEventListener("open", () => {    
             
+            setReconectando(false);
+
             idInterval = setInterval(() => {
                 if( wsc.readyState === WebSocket.OPEN ){
                     console.log("No te mueras servidor");
