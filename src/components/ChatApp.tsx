@@ -21,6 +21,16 @@ const confignotification = async () => {
     await Notification.requestPermission();
 };
 
+// API Navigator
+const browserOnline =  ( setInternet: React.Dispatch<React.SetStateAction<boolean>>  ) => {
+    window.addEventListener('online', () => {
+        setInternet(true);
+    });
+    window.addEventListener('offline', () => {
+        setInternet(false);
+    });
+};
+
 export default function ChatApp(){
 
     const { loadInitMessages } = dataUser;
@@ -38,12 +48,16 @@ export default function ChatApp(){
     const setDarkMode = appZustandStore.useAppDarkStore( state => state.setDarkMode );
     const refIdInterval = useRef(null);
     const [ reconectando, setReconectando ] = useState(false);
+    const [ internet, setInternet ] = useState(true);
 
     useEffect(() => {
         
         // Carga el tema
         const darkModeString = localStorage.getItem("darkMode");
         setDarkMode(darkModeString ? JSON.parse(darkModeString) : false);
+
+        // Suscribir al evento online para saber si hay internet o no
+        browserOnline(setInternet);
 
         window.addEventListener('resize', () => {
             document.documentElement.style.setProperty(
@@ -355,7 +369,7 @@ export default function ChatApp(){
                 <>
                     <ContactList />
                     { activeContact ? <Chat /> : <ChatInitial/> }
-                    { reconectando && 
+                    { (reconectando || !internet) && 
                         <div className={`w-full h-full fixed top-0 left-0 flex flex-col justify-center items-center gap-5 ${ darkMode ? "bg-black/50" : "bg-white/90" }`}>
                             <p className={`${ darkMode ? "text-white" : "text-black" }`}>Reconectando...</p>
                             <Spinner />
