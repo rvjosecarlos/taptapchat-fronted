@@ -73,7 +73,7 @@ export default function Contact( { id, toList, nameContact, emailContact, lastMe
             </div>
             <div>
                 <h2 className={`font-semibold whitespace-nowrap ${ darkMode ? "text-white" : "text-black" }`}>{nameContact.length > 20 ? nameContact.substring(0,2).trim() : nameContact}</h2>
-                { toList && <p className={`${ darkMode ? "text-slate-200" : "text-slate-500" } text-xs text-slate-500 whitespace-nowrap font-semibold`}>{ lastMessage.length > 20 ? lastMessage.substring(0,20).trim() + "..." : lastMessage.substring(0,20).trim()}</p> }
+                { toList && <p className={`${ darkMode ? "text-slate-200" : "text-slate-500" } text-xs text-slate-300 whitespace-nowrap font-semibold`}>{ lastMessage.length > 20 ? lastMessage.substring(0,20).trim() + "..." : lastMessage.substring(0,20).trim()}</p> }
                 <p className={`${ darkMode ? "text-slate-200" : "text-slate-500" } text-xs whitespace-nowrap`}>{ online ? "En línea" : /*timeDisconnected*/ "Desconectado" }</p>
             </div>
             { 
