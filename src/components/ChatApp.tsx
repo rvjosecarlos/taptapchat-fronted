@@ -13,7 +13,6 @@ import { decryptMessage } from "../services/encryption/desencriptar";
 import Spinner from "./Spinner";
 import { logout } from "../api/authAPI";
 import Logo from "./Logo";
-import { createBackup } from "../services/backupProcess/backupProcess";
 
 let render = 0;
 
@@ -78,6 +77,19 @@ export default function ChatApp(){
             const res: ServerResponse = await getPendingMessages(userProfile!.id);
             if( res.success && res.data ){
                 const mensajes: Message[] = JSON.parse(JSON.stringify(res.data));
+
+                await getContactos();
+
+                mensajes.map( async (mensaje) => {
+                    // Valida que todos los usuarios existan y si no crea el contacto
+                    if( !appZustandStore.useContactListStore.getState().contactos.find( contacto => contacto.id === mensaje.contactId ) ){
+                        console.log("Creando contactos");
+                        const resSearchContact: ServerResponse = await searchContactById(mensaje.contactId);
+                        const msg = { message: await decryptMessage(mensaje.message) }
+                        createNewContact(resSearchContact, msg );
+                    }
+                });                
+                
 
                 // Crear un arreglo de promesas para pasarlas a promise.all y pueda bloquear el codigo para que no se siga
                 const promesas = mensajes.map(async (mensaje) => {
@@ -165,30 +177,7 @@ export default function ChatApp(){
                         // Revisa que el contacto exista el la lista y si no, se crea
                         const resSearchContact: ServerResponse = await searchContactById(resWS.originUserId);
                         if( !appZustandStore.useContactListStore.getState().contactos.find(  contacto => contacto.id === resWS.originUserId ) ){
-                            console.log("ENTROO EN EL ELSE");                            
-
-                            // Se prepara el nuevo contacto
-                            const newContact = {
-                                "id": JSON.parse(JSON.stringify(resSearchContact.data))!.id,
-                                "nameContact": JSON.parse(JSON.stringify(resSearchContact.data))!.name,
-                                "emailContact": JSON.parse(JSON.stringify(resSearchContact.data))!.email,
-                                "toList": false,
-                                "lastMessage": mensaje.message,
-                                "online": false,
-                                "timeDisconnected": 0,
-                                "leido": false,
-                                "userId": userProfile!.id,
-                                "imgUrl": JSON.parse(JSON.stringify(resSearchContact.data)).imgUrl
-                            };
-
-                            console.log("Nuevo contacto",newContact);
-
-                            dataUser.addContact(newContact);
-
-                            
-                            // Renderiza el nuevo contacto
-                            setContactosFiltrados([...appZustandStore.useContactListStore.getState().contactos, { ...newContact, online: true }]);
-                            setContactos([...appZustandStore.useContactListStore.getState().contactos, { ...newContact, online: true }]);
+                            createNewContact( resSearchContact, mensaje );
                         }
                         else{
                             actualizarStatusContactos({resWS, estado: true, mensaje: mensaje.message});
@@ -341,6 +330,32 @@ export default function ChatApp(){
             });
         };
     };
+
+    const createNewContact = (resSearchContact: ServerResponse, mensaje: { message: string }) => {
+        
+        // Se prepara el nuevo contacto
+        const newContact = {
+            "id": JSON.parse(JSON.stringify(resSearchContact.data))!.id,
+            "nameContact": JSON.parse(JSON.stringify(resSearchContact.data))!.name,
+            "emailContact": JSON.parse(JSON.stringify(resSearchContact.data))!.email,
+            "toList": false,
+            "lastMessage": mensaje.message,
+            "online": false,
+            "timeDisconnected": 0,
+            "leido": false,
+            "userId": userProfile!.id,
+            "imgUrl": JSON.parse(JSON.stringify(resSearchContact.data)).imgUrl
+        };
+
+        console.log("Nuevo contacto",newContact);
+
+        dataUser.addContact(newContact);
+
+                            
+        // Renderiza el nuevo contacto
+        setContactosFiltrados([...appZustandStore.useContactListStore.getState().contactos, { ...newContact, online: true }]);
+        setContactos([...appZustandStore.useContactListStore.getState().contactos, { ...newContact, online: true }]);
+    }
 
     return (
         <div 

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Suspense } from "react";
 import { categorias, emojis } from "../../emojis/emojist";
 import { appZustandStore } from "../../store";
@@ -7,7 +8,7 @@ type EmojisContainerProps = {
     setMsj: React.Dispatch<React.SetStateAction<string>>
 }
 
-export default function EmojisContainer({ setMsj }: EmojisContainerProps){
+function EmojisContainer({ setMsj }: EmojisContainerProps){
     const darkMode = appZustandStore.useAppDarkStore( state => state.darkMode );
 
     const handleClickEmoji = (indiceEmoji: number) => {
@@ -43,3 +44,5 @@ export default function EmojisContainer({ setMsj }: EmojisContainerProps){
         </Suspense>
     )
 }
+
+export default memo(EmojisContainer);

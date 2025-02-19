@@ -39,6 +39,7 @@ export default function Example() {
         setWscStore(null);
         setHistoryMessage([]); 
         setUserProfile(null);
+        location.reload();
     };
 
     return (

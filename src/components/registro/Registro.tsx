@@ -3,6 +3,7 @@ import { RegistroUser, ServerResponse } from "../../types";
 import { appZustandStore } from "../../store";
 import { confirmAccount, createAccount, requestNewToken } from "../../api/authAPI";
 import Spinner from "../Spinner";
+import ShowPassword from "./ShowPassword";
 
 const nuevoUsuario = {
     name: "",
@@ -23,6 +24,7 @@ export default function Registro({ tokenParam }: RegistroProps){
     const [spinner, setSpinner] = useState(false);
     const [hiddenAceptar, setHiddenAceptar] = useState(false);
     const [token, setToken] = useState( tokenParam ? tokenParam : "");
+    const [ showPass, setShowPass ] = useState( false );
 
     const handleSubmit = async () => {
 
@@ -114,26 +116,38 @@ export default function Registro({ tokenParam }: RegistroProps){
                         setError("");
                     }}
                 />
-                <input 
-                    type="password" 
-                    placeholder="Contraseña *"
-                    className="p-3 border border-slate-200 rounded" 
-                    value={dataUsuario.password}
-                    onChange={(e) => {
-                        setDataUsuario((state) => ({...state, password: e.target.value}) );
-                        setError("");
-                    }} 
-                />
-                <input 
-                    type="password" 
-                    placeholder="Confirmar contraseña *"
-                    className="p-3 border border-slate-200 rounded" 
-                    value={dataUsuario.passwordConfirm}
-                    onChange={(e) => {
-                        setDataUsuario((state) => ({...state, passwordConfirm: e.target.value}) );
-                        setError("");
-                    }} 
-                />
+                <div className="flex justify-between items-center">
+                    <input 
+                        type={ showPass ? "text" : "password" } 
+                        placeholder="Contraseña *"
+                        className="p-3 border border-slate-200 rounded w-full" 
+                        value={dataUsuario.password}
+                        onChange={(e) => {
+                            setDataUsuario((state) => ({...state, password: e.target.value}) );
+                            setError("");
+                        }} 
+                    />
+                    <ShowPassword 
+                        setShowPass={setShowPass}
+                        showPass={showPass}
+                    />
+                </div>
+                <div className="flex justify-between items-center">
+                    <input 
+                        type={ showPass ? "text" : "password" } 
+                        placeholder="Confirmar contraseña *"
+                        className="p-3 border border-slate-200 rounded w-full" 
+                        value={dataUsuario.passwordConfirm}
+                        onChange={(e) => {
+                            setDataUsuario((state) => ({...state, passwordConfirm: e.target.value}) );
+                            setError("");
+                        }} 
+                    />
+                    <ShowPassword 
+                        setShowPass={setShowPass}
+                        showPass={showPass}
+                    />
+                </div>
                 {
                     spinner ?
                         <Spinner/>
