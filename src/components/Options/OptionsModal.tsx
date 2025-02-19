@@ -24,10 +24,7 @@ export default function Example() {
     const handleCerrarSesión = async () => {
         setCerrarSesion(true);
         await createBackup();
-        await logout(userProfile!.id);
         wscStore!.close(1000, "Usuario cerro la sesión");
-        await dataUser.clearAllBD();
-        localStorage.removeItem("darkMode");
     };
 
     return (

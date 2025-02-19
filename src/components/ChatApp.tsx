@@ -289,12 +289,15 @@ export default function ChatApp(){
                     }, 5000);
                 }
                 else{
+                    logout(userProfile!.id).then( () => console.log("Sesión cerrada") );
+                    dataUser.clearAllBD().then(() => console.log("BD limpiada"));
+                    localStorage.removeItem("darkMode");
+                    location.reload();
                     setContactos([]);
                     setContactosFiltrados([]);
                     setWscStore(null);
                     setHistoryMessage([]); 
                     setUserProfile(null);
-                    location.reload();
                 }
             });
         }
