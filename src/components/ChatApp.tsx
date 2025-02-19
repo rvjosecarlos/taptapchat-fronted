@@ -71,7 +71,7 @@ export default function ChatApp(){
         // Carga mensajes pendientes desde el servidor remoto
         const getAndInsertPendingMessages = async () => {
             const res: ServerResponse = await getPendingMessages(userProfile!.id);
-            if( res.success && res.data ){
+            if(res && res.success && res.data ){
                 const mensajes: Message[] = JSON.parse(JSON.stringify(res.data));
 
                 await getContactos();
