@@ -1,8 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import { appZustandStore } from '../../store';
-import { logout } from '../../api/authAPI';
 import OptionsBackup from './OptionsBackup';
-import { dataUser } from '../../config/dataUser';
 import { createBackup } from '../../services/backupProcess/backupProcess';
 import OptionsProfile from './OptionsProfile';
 
@@ -10,7 +8,6 @@ export default function Example() {
     
     const setShowBackupView = appZustandStore.useModalStore( state => state.setShowBackupView );
     const setShowProfileView = appZustandStore.useModalStore( state => state.setShowProfileView );
-    const userProfile = appZustandStore.useUserStore(state => state.userProfile);
     const wscStore = appZustandStore.useSocketStore(state => state.wscStore);
     const setCerrarSesion = appZustandStore.useUserStore( state => state.setCerrarSesion );
     const setDarkMode = appZustandStore.useAppDarkStore( state => state.setDarkMode );
