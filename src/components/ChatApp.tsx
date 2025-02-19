@@ -287,7 +287,10 @@ export default function ChatApp(){
                         console.warn("Reconectando");
                         await suscribeWebSocket();
                     }, 5000);
-                };
+                }
+                else{
+                    location.reload();
+                }
             });
         }
 
