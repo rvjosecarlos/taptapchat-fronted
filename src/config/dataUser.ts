@@ -151,8 +151,8 @@ export class dataUser {
             };
 
             transaccion.onerror = (e) => {
-                console.error("Error al crear la transaccion");
-                //console.log(e);
+                //console.error("Error al crear la transaccion");
+                console.log(e);
             };
 
             const usuariObjectStore = transaccion.objectStore('user');

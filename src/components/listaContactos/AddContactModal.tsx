@@ -72,7 +72,7 @@ export default function AddContactModal(){
             };
     
             // Agregar el contacto a la BD local de indexedDB
-            const resBD = await addContact(newContact);
+            await addContact(newContact);
     
             // Renderiza el nuevo contacto
             setContactosFiltrados([...contactos, newContact]);
