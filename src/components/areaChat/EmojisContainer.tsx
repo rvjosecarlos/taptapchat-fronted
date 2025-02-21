@@ -5,10 +5,11 @@ import { appZustandStore } from "../../store";
 import Spinner from "../Spinner";
 
 type EmojisContainerProps = {
-    setMsj: React.Dispatch<React.SetStateAction<string>>
+    setMsj: React.Dispatch<React.SetStateAction<string>>,
+    viewEmojis: boolean
 }
 
-function EmojisContainer({ setMsj }: EmojisContainerProps){
+function EmojisContainer({ setMsj, viewEmojis }: EmojisContainerProps){
     const darkMode = appZustandStore.useAppDarkStore( state => state.darkMode );
 
     const handleClickEmoji = (indiceEmoji: number) => {
@@ -18,7 +19,7 @@ function EmojisContainer({ setMsj }: EmojisContainerProps){
     return(
         <Suspense fallback={<Spinner/>}>
             <div
-                className={`${ darkMode ? "bg-black/70 text-white border-[#252525]" : "bg-white/50 border border-slate-100" } border fixed bottom-24 -mb-1 h-72 w-72 overflow-x-hidden p-3 overflow-y-scroll grid grid-cols-8 gap-3 backdrop-blur-sm`}
+                className={`${ darkMode ? "bg-black/70 text-white border-[#252525]" : "bg-white/50 border border-slate-100" } border fixed bottom-24 -mb-1 h-72 w-72 overflow-x-hidden p-3 overflow-y-scroll grid grid-cols-8 gap-3 backdrop-blur-sm ${ viewEmojis ? " translate-x-0" : " -translate-x-[500px] opacity-0" }`}
             >
                 {
                     emojis.map( (emoji, indice) => 

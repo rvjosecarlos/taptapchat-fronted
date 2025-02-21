@@ -99,10 +99,11 @@ export default function FormChat(){
     };
 
     return(
-        <div className={`${ darkMode ? "bg-[#252525]" : "bg-white" } min-h-20 absolute bottom-0  w-full flex items-center`}>
-            {
-                viewEmojis &&<EmojisContainer setMsj={setMsj}/>
-            }
+        <div className={`${ darkMode ? "bg-[#252525]" : "bg-white" } z-20 min-h-20 absolute bottom-0  w-full flex items-center`}>
+            <EmojisContainer 
+                setMsj={setMsj}
+                viewEmojis={viewEmojis}
+            />
             <div className="bg-black flex justify-center items-center ml-2 rounded-lg  hover:bg-slate-700">
                 <button
                     onClick={() => setViewEmojis(!viewEmojis)}
