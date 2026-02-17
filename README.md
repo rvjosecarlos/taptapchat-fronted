@@ -1,50 +1,43 @@
-# React + TypeScript + Vite
+# 💬 TapTapChat - Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación de mensajería instantánea en tiempo real. Los usuarios pueden chatear con otros usuarios de forma instantánea.
 
-Currently, two official plugins are available:
+## 🚀 Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[🔗 Ver demo en vivo](https://taptapchat-fronted.vercel.app/) 
 
-## Expanding the ESLint configuration
+## 📸 Capturas
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+![Vista Chat](https://res.cloudinary.com/domj6qqht/image/upload/v1771368771/taptapchat2_on3r7z.gif)
+![Vista Chat](https://res.cloudinary.com/domj6qqht/image/upload/v1771368771/taptapchat1_bqfirp.gif)
+![Vista Chat](https://res.cloudinary.com/domj6qqht/image/upload/v1771368771/taptapchat3_dkjpqk.gif)
+![TapTapChat en acción](https://res.cloudinary.com/domj6qqht/image/upload/w_400/v1771368794/screenshot1_gbgszg.jpg)
 
-- Configure the top-level `parserOptions` property like this:
+## 🛠️ Stack Tecnológico
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- **Framework:** React 18
+- **Lenguaje:** TypeScript
+- **Estilos:** CSS / Tailwind
+- **Tiempo real:** Socket.io-client
+- **Estado:** Zustand
+- **Peticiones:** Axios
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## ✨ Características
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+- 💬 **Mensajería en tiempo real** - Los mensajes aparecen sin recargar
+- 👥 **Usuarios conectados** - Ve quién está en línea en cada sala
+- 📱 **Diseño responsive** - Funciona en móvil y escritorio
+- 🔔 **Notificaciones** - Alertas de nuevos mensajes
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+## 📦 Instalación local
+
+```bash
+# Clonar repositorio
+git clone https://github.com/rvjosecarlos/taptapchat-fronted.git
+
+# Instalar dependencias
+npm install
+
+# Ejecutar en desarrollo
+npm run dev
 ```
