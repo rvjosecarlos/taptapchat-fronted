@@ -22,6 +22,13 @@ Aplicación de mensajería instantánea en tiempo real. Los usuarios pueden chat
 - **Estado:** Zustand
 - **Peticiones:** Axios
 
+## 🧠 Arquitectura Frontend
+
+- **Estado global desacoplado** con Zustand para sesión, usuarios y mensajes.
+- **Conexión WebSocket centralizada** fuera de componentes UI.
+- **Actualización reactiva de mensajes** sin recarga.
+- Manejo básico de reconexión automática.
+
 ## ✨ Características
 
 - 💬 **Mensajería en tiempo real** - Los mensajes aparecen sin recargar
